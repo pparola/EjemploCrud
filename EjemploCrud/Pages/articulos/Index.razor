@@ -1,0 +1,65 @@
+﻿@page "/articulos/index"
+
+@inject IArticulosServicio _articulosServicio
+@inject NavigationManager _navigationManager
+
+<PageTitle>Articulos</PageTitle>
+
+<h1>Articulos</h1>
+
+
+@if (Articulos == null)
+{
+    <div class="alert alert-warning" role="alert">
+        Cargando...
+    </div>
+}
+else
+{
+    <table class="table">
+        <thead class="table-dark">
+            <tr>
+                <td>Nombre</td>
+                <td>Precio</td>
+                <td>Fecha Compra</td>
+                <td></td>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var X in Articulos)
+            {
+                <tr>
+                    <td>@X.Nombre</td>
+                    <td>@X.Precio.ToString("#,##0.00")</td>
+                    <td>@X.FechaCompra.ToString("dd/MM/yyyy")</td>
+                    <td><a href="/articulos/modificar/@X.Id">Modificar</a> 
+                    <a href="/articulos/eliminar/@X.Id">Eliminar</a> </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<br />
+<button class="btn btn-primary" @onclick="Agregar">Agregar</button>
+
+
+
+
+
+
+@code {
+    private List<Articulo> Articulos { get; set; } = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Articulos = await _articulosServicio.Listar();
+    }
+
+    private async Task Agregar()
+    {
+        _navigationManager.NavigateTo("/articulos/agregar");
+    }
+
+
+}
